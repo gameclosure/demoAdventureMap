@@ -32,29 +32,11 @@ exports = Class(GC.Application, function () {
 				'resources/images/water-14.png'
 			];
 
-		var map = [
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-				[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
-			];
-
 		this._adventureMapModel = new AdventureMapModel({
 			tileSize: 256,
 			width: 16,
-			height: 16
+			height: 16,
+			defaultTile: 3
 		});
 
 		this._scrollData = {
@@ -71,7 +53,7 @@ exports = Class(GC.Application, function () {
 			tileSize: this._adventureMapModel.getTileSize(),
 			tileCtor: BackgroundTileView,
 			data: this._scrollData,
-			map: map,
+			map: this._adventureMapModel.getMap(),
 			tiles: tiles,
 			canDrag: true
 		});
@@ -107,7 +89,9 @@ exports = Class(GC.Application, function () {
 			width: this._adventureMapModel.getTileSize(),
 			height: this._adventureMapModel.getTileSize(),
 			adventureMapModel: this._adventureMapModel,
-			scrollData: this._scrollData
+			scrollData: this._scrollData,
+			tiles: tiles,
+			map: this._adventureMapModel.getMap()
 		});
 
 		this._adventureMapLayer1.on('Size', bind(this._adventureMapModel, 'onSize'));

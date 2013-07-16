@@ -29,9 +29,8 @@ exports = Class(ImageView, function (supr) {
 		this._tileY = tileY;
 
 		var superview = this._superview;
-		this.setImage(this._tiles[this._map[tileX][tileY]]);
+		this.setImage(this._tiles[this._map[tileY][tileX]]);
 
-//		this.style.backgroundColor = ['rgba(110, 206, 61, 1)', 'rgba(100, 186, 55, 1)'][(tileX + tileY) & 1];
 		this.style.visible = true;
 	};
 

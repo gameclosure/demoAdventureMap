@@ -11,6 +11,7 @@ exports = Class(Emitter, function (supr) {
 			};
 		var grid = [];
 
+		this._map = this.createEmptyMap(opts.width, opts.height, opts.defaultTile);
 		this._autoLevel = true;
 
 		for (var y = 0; y < data.height; y++) {
@@ -31,6 +32,27 @@ exports = Class(Emitter, function (supr) {
 
 		this._data = data;
 		this._needsPopulate = false;
+
+		try {
+			var savedData = localStorage.getItem('MAP_DATA');
+			if (savedData !== null) {
+				savedData = JSON.parse(savedData);
+				this._data.grid = savedData.grid;
+				this._map = savedData.map;
+			}
+		} catch (error) {
+		}
+	};
+
+	this.createEmptyMap = function (width, height, value) {
+		var result = [];
+		for (var y = 0; y < height; y++) {
+			result[y] = [];
+			for (var x = 0; x < width; x++) {
+				result[y][x] = value;
+			}
+		}
+		return result;
 	};
 
 	this.tick = function (dt) {
@@ -40,6 +62,10 @@ exports = Class(Emitter, function (supr) {
 		}
 
 		this.emit('Update', this._data);
+	};
+
+	this.getMap = function () {
+		return this._map;
 	};
 
 	this.getTileSize = function () {
@@ -101,5 +127,15 @@ exports = Class(Emitter, function (supr) {
 
 	this.toggleTile = function (tileX, tileY) {
 		this._data.grid[tileY][tileX].level = !this._data.grid[tileY][tileX].level;
+	};
+
+	this.toJSON = function () {
+		return {
+			tileSize: this._data.tileSize,
+			width: this._data.width,
+			height: this._data.height,
+			map: this._map,
+			grid: this._data.grid
+		};
 	};
 });

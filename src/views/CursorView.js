@@ -1,4 +1,5 @@
 import ui.View as View;
+import ui.TextView as TextView;
 
 exports = Class(View, function (supr) {
 	this.init = function (opts) {
@@ -7,6 +8,8 @@ exports = Class(View, function (supr) {
 		this._height = opts.height;
 		this._tileX = 0;
 		this._tileY = 0;
+		this._map = opts.map;
+		this._tiles = opts.tiles;
 
 		opts.width *= 1.4;
 		opts.height *= 1.4;
@@ -38,6 +41,29 @@ exports = Class(View, function (supr) {
 			backgroundColor: '#000000'
 		}).on('InputSelect', bind(this, 'onLevel'));
 
+		new TextView({
+			superview: this,
+			x: this.style.width - size * 2,
+			y: 0,
+			width: size,
+			height: size,
+			backgroundColor: '#000000',
+			size: (0.8 * size) | 0,
+			color: '#FFFFFF',
+			text: '-'
+		}).on('InputSelect', bind(this, 'onBackgroundM'));
+		new TextView({
+			superview: this,
+			x: this.style.width - size,
+			y: 0,
+			width: size,
+			height: size,
+			backgroundColor: '#000000',
+			size: (0.8 * size) | 0,
+			color: '#FFFFFF',
+			text: '+'
+		}).on('InputSelect', bind(this, 'onBackgroundP'));
+
 		this._rightView = new View({
 			superview: this,
 			x: this.style.width - size,
@@ -68,6 +94,12 @@ exports = Class(View, function (supr) {
 		this.style.visible = true;
 	};
 
+	this.update = function () {
+		var data = this._adventureMapModel.toJSON();
+		localStorage.setItem('MAP_DATA', JSON.stringify(data));
+		this.emit('NeedsPopulate');
+	};
+
 	this.onPosition = function (event) {
 		var adventureMapModel = this._adventureMapModel;
 		var tile = adventureMapModel.getData().grid[this._tileY][this._tileX];
@@ -77,7 +109,7 @@ exports = Class(View, function (supr) {
 		tile.x = point.x / this._width;
 		tile.y = point.y / this._height;
 
-		this.emit('NeedsPopulate');
+		this.update();
 	};
 
 	this.onLevel = function () {
@@ -85,7 +117,17 @@ exports = Class(View, function (supr) {
 		var data = adventureMapModel.getData();
 
 		data.grid[this._tileY][this._tileX].level = !data.grid[this._tileY][this._tileX].level;
-		this.emit('NeedsPopulate');
+		this.update();
+	};
+
+	this.onBackgroundM = function () {
+		this._map[this._tileY][this._tileX] = (this._map[this._tileY][this._tileX] + this._tiles.length - 1) % this._tiles.length;
+		this.update();
+	};
+
+	this.onBackgroundP = function () {
+		this._map[this._tileY][this._tileX] = (this._map[this._tileY][this._tileX] + 1) % this._tiles.length;
+		this.update();
 	};
 
 	this.onRight = function () {
@@ -93,7 +135,7 @@ exports = Class(View, function (supr) {
 		var data = adventureMapModel.getData();
 
 		data.grid[this._tileY][this._tileX].right = !data.grid[this._tileY][this._tileX].right;
-		this.emit('NeedsPopulate');
+		this.update();
 	};
 
 	this.onBottom = function () {
@@ -101,6 +143,6 @@ exports = Class(View, function (supr) {
 		var data = adventureMapModel.getData();
 
 		data.grid[this._tileY][this._tileX].bottom = !data.grid[this._tileY][this._tileX].bottom;
-		this.emit('NeedsPopulate');
+		this.update();
 	};
 });
