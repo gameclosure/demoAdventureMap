@@ -12,15 +12,14 @@ exports = Class(Emitter, function (supr) {
 		var grid = [];
 
 		this._map = this.createEmptyMap(opts.width, opts.height, opts.defaultTile);
-		this._autoLevel = true;
 
 		for (var y = 0; y < data.height; y++) {
 			var gridLine = [];
 			for (var x = 0; x < data.width; x++) {
 				gridLine.push({
-					level: false,
-					right: false,
-					bottom: false,
+					node: 0,
+					right: 0,
+					bottom: 0,
 					x: 0.5,
 					y: 0.5
 				});
@@ -123,10 +122,6 @@ exports = Class(Emitter, function (supr) {
 		} else {
 			data.y = 0;
 		}
-	};
-
-	this.toggleTile = function (tileX, tileY) {
-		this._data.grid[tileY][tileX].level = !this._data.grid[tileY][tileX].level;
 	};
 
 	this.toJSON = function () {

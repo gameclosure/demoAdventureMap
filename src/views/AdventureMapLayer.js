@@ -31,7 +31,12 @@ exports = Class(View, function (supr) {
 				superview: this,
 				tileSize: opts.tileSize,
 				width: opts.tileSize,
-				height: opts.tileSize
+				height: opts.tileSize,
+				tiles: opts.tiles,
+				nodes: opts.nodes,
+				paths: opts.paths,
+				dotDistance: opts.dotDistance,
+				dashDistance: opts.dashDistance
 			}
 		});
 	};
@@ -67,6 +72,8 @@ exports = Class(View, function (supr) {
 				view.style.zIndex = sizeX * sizeY - index;
 				view.style.x = x * tileSize;
 				view.style.y = y * tileSize;
+				view.style.width = tileSize;
+				view.style.height = tileSize;
 				view.update(grid, data.tileX + x, data.tileY + y);
 				index++;
 			}
@@ -144,9 +151,5 @@ exports = Class(View, function (supr) {
 
 	this.getMap = function () {
 		return this._map;
-	};
-
-	this.getTiles = function () {
-		return this._tiles;
 	};
 });

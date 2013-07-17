@@ -21,14 +21,13 @@ exports = Class(ImageView, function (supr) {
 		this._tileX = 0;
 		this._tileY = 0;
 		this._map = this._superview.getMap();
-		this._tiles = this._superview.getTiles();
+		this._tiles = opts.tiles;
 	};
 
 	this.update = function (grid, tileX, tileY) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		var superview = this._superview;
 		this.setImage(this._tiles[this._map[tileY][tileX]]);
 
 		this.style.visible = true;

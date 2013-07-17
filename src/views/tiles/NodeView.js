@@ -31,6 +31,8 @@ exports = Class(ImageView, function (supr) {
 			height: 100,
 			image: 'resources/images/path/dot.png'
 		});
+
+		this._nodes = opts.nodes;
 	};
 
 	this.update = function (grid, tileX, tileY) {
@@ -38,10 +40,11 @@ exports = Class(ImageView, function (supr) {
 		this._tileY = tileY;
 
 		var tile = grid[tileY][tileX];
-		if (tile.level) {
+		if (tile.node) {
 			this._itemView.style.x = this.style.width * tile.x - 50;
 			this._itemView.style.y = this.style.height * tile.y - 50;
+			this._itemView.setImage(this._nodes[tile.node - 1].image);
 		}
-		this.style.visible = tile.level;
+		this.style.visible = tile.node;
 	};
 });
