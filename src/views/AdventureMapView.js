@@ -1,6 +1,6 @@
 import ui.View as View;
 
-import .AdventureMapLayer;
+import .AdventureMapLayerView;
 
 import .tiles.TileView as TileView;
 import .tiles.PathView as PathView;
@@ -11,6 +11,8 @@ exports = Class(View, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
 
+		this.style.clip = true;
+
 		this._tileSize = opts.tileSize;
 		this._scrollData = opts.scrollData;
 		this._adventureMapLayers = [];
@@ -18,7 +20,7 @@ exports = Class(View, function (supr) {
 		var ctors = [TileView, PathView, NodeView];
 
 		for (var i = 0; i < 3; i++) {
-			this._adventureMapLayers.push(new AdventureMapLayer({
+			this._adventureMapLayers.push(new AdventureMapLayerView({
 				superview: opts.superview,
 				x: opts.x,
 				y: opts.y,
@@ -78,5 +80,11 @@ exports = Class(View, function (supr) {
 
 	this.getAdventureMapLayers = function () {
 		return this._adventureMapLayers;
+	};
+
+	this.setScale = function (scale) {
+		for (var i = 0; i < 3; i++) {
+			this._adventureMapLayers[i].style.scale = scale;
+		}
 	};
 });

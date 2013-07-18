@@ -15,7 +15,7 @@ exports = Class(BottomBar, function (supr) {
 			height: size - 8,
 			style: 'BLUE',
 			title: 'Zoom in'
-		}).on('Up', bind(this, 'onZoomIn'));
+		}).on('Up', bind(this, 'emit', 'ZoomIn'));
 
 		new EditButton({
 			superview: this,
@@ -25,14 +25,6 @@ exports = Class(BottomBar, function (supr) {
 			height: size - 8,
 			style: 'BLUE',
 			title: 'Zoom out'
-		}).on('Up', bind(this, 'onZoomOut'));
-	};
-
-	this.onZoomIn = function () {
-
-	};
-
-	this.onZoomOut = function () {
-
+		}).on('Up', bind(this, 'emit', 'ZoomOut'));
 	};
 });

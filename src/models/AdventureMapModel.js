@@ -96,7 +96,6 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.onScrollLeft = function (scrollData) {
-		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileX > 0) {
 			this._data.tileX--;
 			this._needsPopulate = true;
@@ -106,7 +105,6 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.onScrollRight = function (scrollData) {
-		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileX < this._maxX) {
 			this._data.tileX++;
 			this._needsPopulate = true;
@@ -116,7 +114,6 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.onScrollUp = function (scrollData) {
-		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileY > 0) {
 			this._data.tileY--;
 			this._needsPopulate = true;
@@ -126,7 +123,6 @@ exports = Class(Emitter, function (supr) {
 	};
 
 	this.onScrollDown = function (scrollData) {
-		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileY < this._maxY) {
 			this._data.tileY++;
 			this._needsPopulate = true;

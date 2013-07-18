@@ -8,8 +8,6 @@ exports = Class(GestureView, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
 
-		var width = this.style.width;
-		var height = this.style.height;
 		var tileSize = opts.tileSize;
 
 		this.style.x = -tileSize;
@@ -18,14 +16,10 @@ exports = Class(GestureView, function (supr) {
 		this._tileSize = tileSize;
 		this._tiles = opts.tiles ? this._loadTiles(opts.tiles) : [];
 		this._map = opts.map;
-
-		this._needsPopulate = true;
 		this._scrollData = opts.scrollData;
-		this._sizeX = Math.ceil(width / tileSize) + 4;
-		this._sizeY = Math.ceil(height / tileSize) + 4;
 
 		this._viewPool = new ViewPool({
-			initCount: this._sizeX * this._sizeY,
+			initCount: 200,
 			ctor: opts.tileCtor,
 			initOpts: {
 				superview: this,
@@ -42,6 +36,25 @@ exports = Class(GestureView, function (supr) {
 				labelCtor: opts.labelCtor
 			}
 		});
+
+		this._updateSize();
+	};
+
+	this._updateSize = function () {
+		var width = this._superview.style.width;
+		var height = this._superview.style.height;
+		var scale = this.style.scale;
+
+		if ((width !== this._width) || (height !== this._height) || (scale !== this._scale)) {
+			console.log('==============>', this.style.scale);
+			this._width = width;
+			this._height = height;
+			this._scale = scale;
+			this._sizeX = Math.ceil(width / this._tileSize / scale) + 4;
+			this._sizeY = Math.ceil(height / this._tileSize / scale) + 4;
+			this._needsPopulate = true;
+			console.log(this._sizeX, this._sizeY);
+		}
 	};
 
 	this._loadTiles = function (tiles) {
@@ -93,6 +106,8 @@ exports = Class(GestureView, function (supr) {
 	};
 
 	this.onUpdate = function (data) {
+		this._updateSize();
+
 		if (this._needsPopulate) {
 			this.populateView(data);
 		}

@@ -6,7 +6,6 @@ exports = Class(View, function (supr) {
 		this._scrollData = opts.scrollData;
 		this._tileX = 0;
 		this._tileY = 0;
-		this._tiles = opts.tiles;
 
 		supr(this, 'init', [opts]);
 
@@ -24,8 +23,8 @@ exports = Class(View, function (supr) {
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		this.style.x = (tileX - adventureMapModel.getTileX() - 2) * adventureMapModel.getTileSize() + scrollData.x;
-		this.style.y = (tileY - adventureMapModel.getTileY() - 2) * adventureMapModel.getTileSize() + scrollData.y;
+		this.style.x = (tileX - adventureMapModel.getTileX()) * adventureMapModel.getTileSize() + scrollData.x;
+		this.style.y = (tileY - adventureMapModel.getTileY()) * adventureMapModel.getTileSize() + scrollData.y;
 		this.style.visible = true;
 	};
 
