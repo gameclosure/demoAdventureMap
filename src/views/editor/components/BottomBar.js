@@ -54,7 +54,7 @@ exports = Class(View, function (supr) {
 
 	this.show = function () {
 		if (!this.style.visible) {
-			this.style.y = this._startY + this._size;
+			this.style.y = this._startY + this._size + 80;
 			this.style.visible = true;
 			animate(this).clear().then({y: this._startY}, 300);
 		}
@@ -62,7 +62,7 @@ exports = Class(View, function (supr) {
 
 	this.hide = function () {
 		if (this.style.visible) {
-			animate(this).then({y: this._startY + this._size}, 300).then(bind(this, function () { this.style.visible = false; }));
+			animate(this).then({y: this._startY + this._size + 80}, 300).then(bind(this, function () { this.style.visible = false; }));
 		}
 	};
 });

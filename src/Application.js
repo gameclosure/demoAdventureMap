@@ -28,15 +28,19 @@ exports = Class(GC.Application, function () {
 			];
 
 		var nodes = [
-				{type: 'active', image: 'resources/images/node/activeRing.png'},
-				{type: 'blue', image: 'resources/images/node/blue.png'},
-				{type: 'dark', image: 'resources/images/node/dark.png'}
+				{type: 'active', image: 'resources/images/node/activeRing.png', width: 168, height: 145},
+				{type: 'blue', image: 'resources/images/node/blue.png', width: 94, height: 89},
+				{type: 'dark', image: 'resources/images/node/dark.png', width: 94, height: 89}
 			];
 
 		var paths = [
 				{type: 'dash', image: 'resources/images/path/dash.png', width: 51, height: 31},
 				{type: 'dot', image: 'resources/images/path/dot.png', width: 31, height: 31},
 				{type: 'line', image: 'resources/images/path/line.png', height: 31}
+			];
+
+		var tags = [
+				'Stars', 'Warp', 'Bonus'
 			];
 
 		this._adventureMap = new AdventureMap({
@@ -49,7 +53,9 @@ exports = Class(GC.Application, function () {
 			dashDistance: 60,
 			tiles: tiles,
 			nodes: nodes,
-			paths: paths
+			paths: paths,
+			labelWidth: 200,
+			labelHeight: 200
 		});
 
 		new Editor({
@@ -61,7 +67,8 @@ exports = Class(GC.Application, function () {
 			adventureMap: this._adventureMap,
 			tiles: tiles,
 			nodes: nodes,
-			paths: paths
+			paths: paths,
+			tags: tags
 		});
 	};
 

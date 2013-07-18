@@ -1,8 +1,10 @@
 import event.Emitter as Emitter;
 
+import .lists.ImageListView as ImageListView;
+import .lists.TagListView as TagListView;
+
 import .CursorView;
 import .MenuBarView;
-import .lists.ImageListView as ImageListView;
 
 exports = Class(Emitter, function () {
 	this.init = function (opts) {
@@ -45,6 +47,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Node', bind(this, 'onNodeEdit'));
 		this._menuBarView.on('Right', bind(this, 'onRightEdit'));
 		this._menuBarView.on('Bottom', bind(this, 'onBottomEdit'));
+		this._menuBarView.on('Tags', bind(this, 'onTagsEdit'));
 
 		this._lists = [];
 
@@ -101,6 +104,20 @@ exports = Class(Emitter, function () {
 			padding: 10,
 			title: 'Bottom path'
 		}).on('Select', bind(this, 'onSelectBottomPath')));
+
+		// Tags
+		this._lists.push(new TagListView({
+			superview: opts.superview,
+			x: 0,
+			y: opts.height - 96,
+			width: opts.width,
+			height: 96,
+			tags: opts.tags,
+			visible: false,
+			canCancel: true,
+			padding: 10,
+			title: 'Tags'
+		}).on('Select', bind(this, 'onSelectTag')));
 
 		this._selectTime = 0;
 		this._adventureMap.getAdventureMapLayer1().on(
@@ -197,5 +214,12 @@ exports = Class(Emitter, function () {
 			data.grid[this._tileY][this._tileX].bottom = index;
 			this.update();
 		}
+	};
+
+	this.onTagsEdit = function () {
+		this.showList(4);
+	};
+
+	this.onSelectTag = function () {
 	};
 });

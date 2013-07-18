@@ -7,6 +7,7 @@ import .views.AdventureMapLayer as AdventureMapLayer;
 import .views.tiles.TileView as TileView;
 import .views.tiles.PathView as PathView;
 import .views.tiles.NodeView as NodeView;
+import .views.tiles.LabelView as LabelView;
 
 exports = Class(Emitter, function (supr) {
 	this.init = function (opts) {
@@ -63,7 +64,10 @@ exports = Class(Emitter, function (supr) {
 			data: this._scrollData,
 			nodes: opts.nodes,
 			canDrag: false,
-			blockEvents: true
+			blockEvents: true,
+			labelWidth: opts.labelWidth,
+			labelHeight: opts.labelHeight,
+			labelCtor: opts.labelCtor || LabelView
 		});
 
 		this._adventureMapLayer1.on('Size', bind(this._model, 'onSize'));

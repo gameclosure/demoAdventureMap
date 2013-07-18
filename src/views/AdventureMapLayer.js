@@ -36,7 +36,10 @@ exports = Class(View, function (supr) {
 				nodes: opts.nodes,
 				paths: opts.paths,
 				dotDistance: opts.dotDistance,
-				dashDistance: opts.dashDistance
+				dashDistance: opts.dashDistance,
+				labelWidth: opts.labelWidth,
+				labelHeight: opts.labelHeight,
+				labelCtor: opts.labelCtor
 			}
 		});
 	};

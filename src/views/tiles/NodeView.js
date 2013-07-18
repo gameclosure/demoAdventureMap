@@ -14,10 +14,6 @@ exports = Class(ImageView, function (supr) {
 
 		this._tileSize = opts.tileSize;
 
-		this._index = 0;
-		this._pointSize = 24;
-		this._pointDistance = 20;
-
 		this._itemView = null;
 		this._itemRightView = null;
 		this._itemBottomView = null;
@@ -25,11 +21,20 @@ exports = Class(ImageView, function (supr) {
 		this._tileX = 0;
 		this._tileY = 0;
 
+		this._labelWidth = opts.labelWidth;
+		this._labelHeight = opts.labelHeight;
+
 		this._itemView = new ImageView({
 			superview: this,
 			width: 100,
 			height: 100,
 			image: 'resources/images/path/dot.png'
+		});
+
+		this._labelView = new opts.labelCtor({
+			superview: this,
+			width: this._labelWidth,
+			height: this._labelHeight			
 		});
 
 		this._nodes = opts.nodes;
@@ -41,9 +46,23 @@ exports = Class(ImageView, function (supr) {
 
 		var tile = grid[tileY][tileX];
 		if (tile.node) {
-			this._itemView.style.x = this.style.width * tile.x - 50;
-			this._itemView.style.y = this.style.height * tile.y - 50;
-			this._itemView.setImage(this._nodes[tile.node - 1].image);
+			var x = this.style.width * tile.x;
+			var y = this.style.height * tile.y;
+
+			var node = this._nodes[tile.node - 1];
+			var style = this._itemView.style;
+
+			style.x = x - node.width * 0.5;
+			style.y = y - node.height * 0.5;
+			style.width = node.width;
+			style.height = node.height;
+
+			this._itemView.setImage(node.image);
+
+			style = this._labelView.style;
+
+			style.x = x - style.width * 0.5;
+			style.y = y - style.height * 0.5;
 		}
 		this.style.visible = tile.node;
 	};

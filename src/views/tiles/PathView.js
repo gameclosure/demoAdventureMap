@@ -14,11 +14,6 @@ exports = Class(ImageView, function (supr) {
 
 		this._tileSize = opts.tileSize;
 
-		this._index = 0;
-		this._pointSize = 24;
-		this._pointDistance = 20;
-
-		this._itemView = null;
 		this._itemRightView = null;
 		this._itemBottomView = null;
 

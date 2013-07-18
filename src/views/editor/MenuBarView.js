@@ -30,10 +30,11 @@ exports = Class(TopBar, function (supr) {
 		});
 
 		var options = [
-				{title: 'Right', method: 'onRight', width: 94},
 				{title: 'Bottom', method: 'onBottom', width: 128},
+				{title: 'Right', method: 'onRight', width: 94},
 				{title: 'Node', method: 'onNode', width: 94},
-				{title: 'Tile', method: 'onTile', width: 76}
+				{title: 'Tile', method: 'onTile', width: 76},
+				{title: 'Tags', method: 'onTags', width: 90}
 			]
 		var x = 4;
 		for (var i = 0; i < options.length; i++) {
@@ -52,28 +53,10 @@ exports = Class(TopBar, function (supr) {
 
 	this.onRight = function () {
 		this.emit('Right');
-		/*
-		if (this._tileX !== null) {
-			var adventureMapModel = this._adventureMapModel;
-			var data = adventureMapModel.getData();
-
-			data.grid[this._tileY][this._tileX].right = !data.grid[this._tileY][this._tileX].right;
-			this.update();
-		}
-		*/
 	};
 
 	this.onBottom = function () {
 		this.emit('Bottom');
-		/*
-		if (this._tileX !== null) {
-			var adventureMapModel = this._adventureMapModel;
-			var data = adventureMapModel.getData();
-
-			data.grid[this._tileY][this._tileX].bottom = !data.grid[this._tileY][this._tileX].bottom;
-			this.update();
-		}
-		*/
 	};
 
 	this.onNode = function () {
@@ -82,5 +65,9 @@ exports = Class(TopBar, function (supr) {
 
 	this.onTile = function () {
 		this.emit('Tile');
+	};
+
+	this.onTags = function () {
+		this.emit('Tags');
 	};
 });
