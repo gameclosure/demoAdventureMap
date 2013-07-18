@@ -24,7 +24,9 @@ exports = Class(ButtonView, function(supr) {
 					color: 'rgb(255, 255, 255)',
 					strokeColor: 'rgb(15, 111, 55)',
 					strokeWidth: 4,
-					padding: [0, 0, 4, 4]
+					autoSize: false,
+					autoFontSize: true,
+					wrap: false
 				}
 			}
 		);

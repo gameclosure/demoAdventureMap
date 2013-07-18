@@ -79,8 +79,15 @@ exports = Class(Emitter, function (supr) {
 		return this._data.tileY;
 	};
 
-	this.getData = function () {
+	this.getData = function (tileX, tileY) {
 		return this._data;
+	};
+
+	this.getGrid = function (tileX, tileY) {
+		if (tileX === undefined) {
+			return this._grid;
+		}
+		return this._data.grid[tileY][tileX];
 	};
 
 	this.onSize = function (sizeX, sizeY) {

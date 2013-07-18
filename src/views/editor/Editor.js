@@ -48,6 +48,7 @@ exports = Class(Emitter, function () {
 		this._menuBarView.on('Right', bind(this, 'onRightEdit'));
 		this._menuBarView.on('Bottom', bind(this, 'onBottomEdit'));
 		this._menuBarView.on('Tags', bind(this, 'onTagsEdit'));
+		this._menuBarView.on('Close', bind(this, 'onCloseEditor'));
 
 		this._lists = [];
 
@@ -116,7 +117,8 @@ exports = Class(Emitter, function () {
 			visible: false,
 			canCancel: true,
 			padding: 10,
-			title: 'Tags'
+			title: 'Tags',
+			adventureMapModel: this._adventureMapModel
 		}).on('Select', bind(this, 'onSelectTag')));
 
 		this._selectTime = 0;
@@ -131,6 +133,12 @@ exports = Class(Emitter, function () {
 					this._cursorView.showAt(tileX, tileY);
 					this._menuBarView.show();
 					this._menuBarView.setPos(tileX, tileY);
+
+					var i = this._lists.length;
+					while (i) {
+						var list = this._lists[--i];
+						list.style.visible && list.show(tileX, tileY);
+					}
 				}
 			)
 		);
@@ -155,12 +163,17 @@ exports = Class(Emitter, function () {
 		this._adventureMap.getAdventureMapLayer3().needsPopulate();
 	};
 
-	this.showList = function (index) {
+	this.showList = function (index, tileX, tileY) {
 		var i = this._lists.length;
 		while (i) {
 			var list = this._lists[--i];
-			(i === index) ? list.show() : list.hide();
+			(i === index) ? list.show(tileX, tileY) : list.hide();
 		}
+	};
+
+	this.onCloseEditor = function () {
+		this.showList(-1);
+		this._cursorView.hide();
 	};
 
 	this.onTileEdit = function () {
@@ -216,8 +229,8 @@ exports = Class(Emitter, function () {
 		}
 	};
 
-	this.onTagsEdit = function () {
-		this.showList(4);
+	this.onTagsEdit = function (tileX, tileY) {
+		this.showList(4, tileX, tileY);
 	};
 
 	this.onSelectTag = function () {
