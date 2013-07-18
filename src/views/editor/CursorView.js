@@ -18,13 +18,12 @@ exports = Class(View, function (supr) {
 
 	this.showAt = function (tileX, tileY) {
 		var adventureMapModel = this._adventureMapModel;
-		var scrollData = this._adventureMap.getScrollData();
 
 		this._tileX = tileX;
 		this._tileY = tileY;
 
-		this.style.x = (tileX - adventureMapModel.getTileX()) * adventureMapModel.getTileSize() + scrollData.x;
-		this.style.y = (tileY - adventureMapModel.getTileY()) * adventureMapModel.getTileSize() + scrollData.y;
+		this.style.x = (tileX - adventureMapModel.getTileX()) * adventureMapModel.getTileSize();
+		this.style.y = (tileY - adventureMapModel.getTileY()) * adventureMapModel.getTileSize();
 		this.style.visible = true;
 	};
 

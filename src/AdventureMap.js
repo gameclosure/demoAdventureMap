@@ -10,8 +10,8 @@ exports = Class(Emitter, function (supr) {
 
 		this._model = new AdventureMapModel({
 			tileSize: 256,
-			width: 16,
-			height: 16,
+			width: 20,
+			height: 20,
 			defaultTile: 3
 		});
 
@@ -25,8 +25,7 @@ exports = Class(Emitter, function (supr) {
 		opts.scrollData = this._scrollData;
 		this._adventureMapView = new AdventureMapView(opts);
 
-		this._adventureMapView.getAdventureMapLayers()[0].on('Size', bind(this._model, 'onSize'));
-
+		this._adventureMapView.on('Size', bind(this._model, 'onSize'));
 		this._adventureMapView.on('ScrollLeft', bind(this._model, 'onScrollLeft'));
 		this._adventureMapView.on('ScrollRight', bind(this._model, 'onScrollRight'));
 		this._adventureMapView.on('ScrollUp', bind(this._model, 'onScrollUp'));

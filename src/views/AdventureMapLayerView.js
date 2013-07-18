@@ -19,7 +19,7 @@ exports = Class(GestureView, function (supr) {
 		this._scrollData = opts.scrollData;
 
 		this._viewPool = new ViewPool({
-			initCount: 200,
+			initCount: 256,
 			ctor: opts.tileCtor,
 			initOpts: {
 				superview: this,
@@ -27,6 +27,7 @@ exports = Class(GestureView, function (supr) {
 				width: opts.tileSize,
 				height: opts.tileSize,
 				tiles: opts.tiles,
+				map: opts.map,
 				nodes: opts.nodes,
 				paths: opts.paths,
 				dotDistance: opts.dotDistance,
@@ -41,19 +42,17 @@ exports = Class(GestureView, function (supr) {
 	};
 
 	this._updateSize = function () {
-		var width = this._superview.style.width;
-		var height = this._superview.style.height;
-		var scale = this.style.scale;
+		var width = this._superview.getSuperview().style.width; // AdventureMapView
+		var height = this._superview.getSuperview().style.height; // AdventureMapView
+		var scale = this._superview.style.scale; // AdventureMapView._content
 
 		if ((width !== this._width) || (height !== this._height) || (scale !== this._scale)) {
-			console.log('==============>', this.style.scale);
 			this._width = width;
 			this._height = height;
 			this._scale = scale;
 			this._sizeX = Math.ceil(width / this._tileSize / scale) + 4;
 			this._sizeY = Math.ceil(height / this._tileSize / scale) + 4;
 			this._needsPopulate = true;
-			console.log(this._sizeX, this._sizeY);
 		}
 	};
 
@@ -102,18 +101,12 @@ exports = Class(GestureView, function (supr) {
 		this._gridHeight = data.height;
 		this._needsPopulate = false;
 
-		this.emit('Size', sizeX, sizeY);
+		this._superview.getSuperview().emit('Size', sizeX, sizeY);
 	};
 
 	this.onUpdate = function (data) {
 		this._updateSize();
-
-		if (this._needsPopulate) {
-			this.populateView(data);
-		}
-
-		this.style.x = this._scrollData.x - this._tileSize * 2;
-		this.style.y = this._scrollData.y - this._tileSize * 2;
+		this._needsPopulate && this.populateView(data);
 	};
 
 	this.needsPopulate = function () {

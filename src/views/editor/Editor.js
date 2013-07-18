@@ -17,12 +17,13 @@ exports = Class(Emitter, function () {
 		this._tileY = null;
 
 		this._cursorView = new CursorView({
-			superview: this._adventureMap.getAdventureMapLayers()[2],
+			superview: this._adventureMap.getAdventureMapLayers()[0],
 			x: 0,
 			y: 0,
 			width: this._adventureMapModel.getTileSize(),
 			height: this._adventureMapModel.getTileSize(),
-			adventureMap: this._adventureMap
+			adventureMap: this._adventureMap,
+			zIndex: 999999999
 		});
 
 		this._cursorView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapView(), 'needsPopulate'));
@@ -252,12 +253,10 @@ exports = Class(Emitter, function () {
 	};
 
 	this.onZoomIn = function () {
-		console.log('zoom in');
 		this._adventureMap.getAdventureMapView().setScale(1);
 	};
 
 	this.onZoomOut = function () {
-		console.log('zoom out');
 		this._adventureMap.getAdventureMapView().setScale(0.5);
 	};
 });
