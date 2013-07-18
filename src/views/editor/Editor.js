@@ -13,6 +13,7 @@ exports = Class(Emitter, function () {
 		this._adventureMapModel = this._adventureMap.getModel();
 		this._map = this._adventureMapModel.getMap();
 
+		this._scale = 1;
 		this._tileX = null;
 		this._tileY = null;
 
@@ -118,22 +119,22 @@ exports = Class(Emitter, function () {
 		}));
 
 		// Zoom
-		var zoomView = new ZoomView({
-				superview: opts.superview,
-				x: 0,
-				y: opts.height - 96,
-				width: opts.width,
-				height: 96,
-				tags: opts.tags,
-				visible: false,
-				canCancel: true,
-				padding: 10,
-				title: 'Zoom',
-				adventureMapModel: this._adventureMapModel
-			});
-		this._lists.push(zoomView);
-		zoomView.on('ZoomIn', bind(this, 'onZoomIn'));
-		zoomView.on('ZoomOut', bind(this, 'onZoomOut'));
+		this._zoomView = new ZoomView({
+			superview: opts.superview,
+			x: 0,
+			y: opts.height - 96,
+			width: opts.width,
+			height: 96,
+			tags: opts.tags,
+			visible: false,
+			canCancel: true,
+			padding: 10,
+			title: 'Zoom',
+			adventureMapModel: this._adventureMapModel
+		});
+		this._lists.push(this._zoomView);
+		this._zoomView.on('ZoomIn', bind(this, 'onZoomIn'));
+		this._zoomView.on('ZoomOut', bind(this, 'onZoomOut'));
 
 		this._selectTime = 0;
 		this._adventureMap.getAdventureMapLayers()[0].on(
@@ -253,10 +254,12 @@ exports = Class(Emitter, function () {
 	};
 
 	this.onZoomIn = function () {
-		this._adventureMap.getAdventureMapView().setScale(1);
+		this._scale = this._adventureMap.setScale(this._scale * 0.75);
+		this._zoomView.setScale(this._scale);
 	};
 
 	this.onZoomOut = function () {
-		this._adventureMap.getAdventureMapView().setScale(0.5);
+		this._scale = this._adventureMap.setScale(this._scale * 1.5);
+		this._zoomView.setScale(this._scale);
 	};
 });

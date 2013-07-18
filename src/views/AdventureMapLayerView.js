@@ -74,15 +74,17 @@ exports = Class(GestureView, function (supr) {
 		var sizeY = this._sizeY;
 		var viewPool = this._viewPool;
 		var views = viewPool.getViews();
+		var length = viewPool.getLength();
 		var index = 0;
 
 		for (var y = 0; y < sizeY; y++) {
 			for (var x = 0; x < sizeX; x++) {
 				var view;
-				if (index < viewPool.getLength()) {
+				if (index < length) {
 					view = views[index];
 				} else {
 					view = viewPool.obtainView();
+					length++;
 				}
 				view.style.zIndex = sizeX * sizeY - index;
 				view.style.x = x * tileSize;
@@ -92,6 +94,9 @@ exports = Class(GestureView, function (supr) {
 				view.update(grid, data.tileX + x, data.tileY + y);
 				index++;
 			}
+		}
+		while (index < length) {
+			view = views[index++].style.visible = false;
 		}
 
 		this.style.width = sizeX * tileSize;

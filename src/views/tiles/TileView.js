@@ -34,6 +34,7 @@ exports = Class(ImageView, function (supr) {
 	};
 
 	this.onInputSelect = function () {
+		console.log('select', this._tileX, this._tileY);
 		this._superview.emit('Select', this._tileX, this._tileY);
 	};
 });

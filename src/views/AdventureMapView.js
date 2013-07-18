@@ -13,7 +13,6 @@ exports = Class(View, function (supr) {
 
 		this.style.clip = true;
 
-		this._scale = 1;
 		this._tileSize = opts.tileSize;
 		this._scrollData = opts.scrollData;
 		this._adventureMapLayers = [];
@@ -67,8 +66,8 @@ exports = Class(View, function (supr) {
 		var scrollData = this._scrollData;
 		var tileSize = this._tileSize;
 
-		deltaX /= this._scale;
-		deltaY /= this._scale;
+		deltaX /= this._scrollData.scale;
+		deltaY /= this._scrollData.scale;
 
 		scrollData.x += deltaX;
 		if (scrollData.x < 0) {
@@ -102,7 +101,7 @@ exports = Class(View, function (supr) {
 	};
 
 	this.setScale = function (scale) {
-		this._scale = scale;
+		this._scrollData.scale = scale;
 		this._content.style.scale = scale;
 	};
 });

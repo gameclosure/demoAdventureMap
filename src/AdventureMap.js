@@ -17,7 +17,8 @@ exports = Class(Emitter, function (supr) {
 
 		this._scrollData = {
 			x: 0,
-			y: 0
+			y: 0,
+			scale: 1
 		};
 
 		opts.tileSize = 256;
@@ -49,6 +50,17 @@ exports = Class(Emitter, function (supr) {
 
 	this.getScrollData = function () {
 		return this._scrollData;
+	};
+
+	this.setScale = function (scale) {
+		if (scale < 0.5) {
+			scale = 0.5;
+		} else if (scale > 2) {
+			scale = 2;
+		}
+		this._adventureMapView.setScale(scale);
+
+		return scale;
 	};
 
 	this.tick = function (dt) {
