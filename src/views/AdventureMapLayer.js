@@ -1,9 +1,10 @@
 import ui.View as View;
 import ui.resource.Image as Image;
+import ui.GestureView as GestureView;
 
 import .ViewPool;
 
-exports = Class(View, function (supr) {
+exports = Class(GestureView, function (supr) {
 	this.init = function (opts) {
 		supr(this, 'init', [opts]);
 
@@ -19,8 +20,7 @@ exports = Class(View, function (supr) {
 		this._map = opts.map;
 
 		this._needsPopulate = true;
-		this._data = opts.data;
-		this._canDrag = opts.canDrag;
+		this._scrollData = opts.scrollData;
 		this._sizeX = Math.ceil(width / tileSize) + 4;
 		this._sizeY = Math.ceil(height / tileSize) + 4;
 
@@ -97,55 +97,8 @@ exports = Class(View, function (supr) {
 			this.populateView(data);
 		}
 
-		this.style.x = this._data.x - this._tileSize * 2;
-		this.style.y = this._data.y - this._tileSize * 2;
-	};
-
-	this.onInputStart = function (event) {
-		this._canDrag && this.startDrag();
-	};
-
-	this.onDragStart = function (dragEvent) {
-		this._dragPoint = dragEvent.srcPoint;
-	};
-
-	this.onInputMove = function (event, pt) {
-	};
-
-	this.onDrag = function (dragEvent, moveEvent, delta) {
-		var data = this._data;
-		var tileSize = this._tileSize;
-		var dragPoint = moveEvent.srcPoint;
-		var deltaX = dragPoint.x - this._dragPoint.x;
-		var deltaY = dragPoint.y - this._dragPoint.y;
-
-		data.x += deltaX;
-		if (data.x < 0) {
-			data.x += tileSize;
-			this.emit('ScrollRight', data);
-		} else if (data.x >= tileSize) {
-			data.x -= tileSize;
-			this.emit('ScrollLeft', data);
-		}
-
-		data.y += deltaY;
-		if (data.y < 0) {
-			data.y += tileSize;
-			this.emit('ScrollDown', data);
-		} else if (data.y >= tileSize) {
-			data.y -= tileSize;
-			this.emit('ScrollUp', data);
-		}
-
-		this._dragPoint = dragPoint;
-
-		this.style.x = data.x - tileSize;
-		this.style.y = data.y - tileSize;
-
-		this.emit('Scroll');
-	};
-
-	this.onDragStop = function (dragEvent, selectEvent) {
+		this.style.x = this._scrollData.x - this._tileSize * 2;
+		this.style.y = this._scrollData.y - this._tileSize * 2;
 	};
 
 	this.needsPopulate = function () {

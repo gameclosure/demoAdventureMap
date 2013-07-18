@@ -1,7 +1,8 @@
 import event.Emitter as Emitter;
 
-import .lists.ImageListView as ImageListView;
-import .lists.TagListView as TagListView;
+import .tools.ImageListView as ImageListView;
+import .tools.TagListView as TagListView;
+import .tools.ZoomView as ZoomView;
 
 import .CursorView;
 import .MenuBarView;
@@ -26,9 +27,7 @@ exports = Class(Emitter, function () {
 			tiles: opts.tiles
 		});
 
-		this._cursorView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer1(), 'needsPopulate'));
-		this._cursorView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer2(), 'needsPopulate'));
-		this._cursorView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer3(), 'needsPopulate'));
+		this._cursorView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapView(), 'needsPopulate'));
 
 		this._menuBarView = new MenuBarView({
 			superview: opts.superview,
@@ -40,14 +39,12 @@ exports = Class(Emitter, function () {
 			visible: false
 		});
 
-		this._menuBarView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer1(), 'needsPopulate'));
-		this._menuBarView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer2(), 'needsPopulate'));
-		this._menuBarView.on('NeedsPopulate', bind(opts.adventureMap.getAdventureMapLayer3(), 'needsPopulate'));
 		this._menuBarView.on('Tile', bind(this, 'onTileEdit'));
 		this._menuBarView.on('Node', bind(this, 'onNodeEdit'));
 		this._menuBarView.on('Right', bind(this, 'onRightEdit'));
 		this._menuBarView.on('Bottom', bind(this, 'onBottomEdit'));
 		this._menuBarView.on('Tags', bind(this, 'onTagsEdit'));
+		this._menuBarView.on('Zoom', bind(this, 'onZoom'));
 		this._menuBarView.on('Close', bind(this, 'onCloseEditor'));
 
 		this._lists = [];
@@ -121,8 +118,23 @@ exports = Class(Emitter, function () {
 			adventureMapModel: this._adventureMapModel
 		}).on('Select', bind(this, 'onSelectTag')));
 
+		// Zoom
+		this._lists.push(new ZoomView({
+			superview: opts.superview,
+			x: 0,
+			y: opts.height - 96,
+			width: opts.width,
+			height: 96,
+			tags: opts.tags,
+			visible: false,
+			canCancel: true,
+			padding: 10,
+			title: 'Zoom',
+			adventureMapModel: this._adventureMapModel
+		}));
+
 		this._selectTime = 0;
-		this._adventureMap.getAdventureMapLayer1().on(
+		this._adventureMap.getAdventureMapLayers()[0].on(
 			'Select',
 			bind(
 				this,
@@ -142,7 +154,7 @@ exports = Class(Emitter, function () {
 				}
 			)
 		);
-		this._adventureMap.getAdventureMapLayer1().on(
+		this._adventureMap.getAdventureMapView().on(
 			'Scroll',
 			bind(
 				this,
@@ -158,9 +170,10 @@ exports = Class(Emitter, function () {
 	};
 
 	this.update = function () {
-		this._adventureMap.getAdventureMapLayer1().needsPopulate();
-		this._adventureMap.getAdventureMapLayer2().needsPopulate();
-		this._adventureMap.getAdventureMapLayer3().needsPopulate();
+		var adventureMapLayers = this._adventureMap.getAdventureMapLayers();
+		for (var i = 0; i < 3; i++) {
+			adventureMapLayers[i].needsPopulate();
+		}
 	};
 
 	this.showList = function (index, tileX, tileY) {
@@ -183,7 +196,7 @@ exports = Class(Emitter, function () {
 	this.onSelectTile = function (index) {
 		if (this._tileX !== null) {
 			this._map[this._tileY][this._tileX] = index;
-			this._adventureMap.getAdventureMapLayer1().needsPopulate();
+			this._adventureMap.getAdventureMapLayers()[0].needsPopulate();
 		}
 	};
 
@@ -231,6 +244,10 @@ exports = Class(Emitter, function () {
 
 	this.onTagsEdit = function (tileX, tileY) {
 		this.showList(4, tileX, tileY);
+	};
+
+	this.onZoom = function () {
+		this.showList(5);
 	};
 
 	this.onSelectTag = function () {

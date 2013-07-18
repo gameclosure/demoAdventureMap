@@ -95,39 +95,43 @@ exports = Class(Emitter, function (supr) {
 		this._maxY = this._data.height - sizeY;
 	};
 
-	this.onScrollLeft = function (data) {
+	this.onScrollLeft = function (scrollData) {
+		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileX > 0) {
 			this._data.tileX--;
 			this._needsPopulate = true;
 		} else {
-			data.x = this._data.tileSize;
+			scrollData.x = this._data.tileSize;
 		}
 	};
 
-	this.onScrollRight = function (data) {
+	this.onScrollRight = function (scrollData) {
+		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileX < this._maxX) {
 			this._data.tileX++;
 			this._needsPopulate = true;
 		} else {
-			data.x = 0;
+			scrollData.x = 0;
 		}
 	};
 
-	this.onScrollUp = function (data) {
+	this.onScrollUp = function (scrollData) {
+		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileY > 0) {
 			this._data.tileY--;
 			this._needsPopulate = true;
 		} else {
-			data.y = this._data.tileSize;
+			scrollData.y = this._data.tileSize;
 		}
 	};
 
-	this.onScrollDown = function (data) {
+	this.onScrollDown = function (scrollData) {
+		console.log(this._data.tileX, this._data.tileY);
 		if (this._data.tileY < this._maxY) {
 			this._data.tileY++;
 			this._needsPopulate = true;
 		} else {
-			data.y = 0;
+			scrollData.y = 0;
 		}
 	};
 

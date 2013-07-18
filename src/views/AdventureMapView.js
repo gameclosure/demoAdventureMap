@@ -1,0 +1,82 @@
+import ui.View as View;
+
+import .AdventureMapLayer;
+
+import .tiles.TileView as TileView;
+import .tiles.PathView as PathView;
+import .tiles.NodeView as NodeView;
+import .tiles.LabelView as LabelView;
+
+exports = Class(View, function (supr) {
+	this.init = function (opts) {
+		supr(this, 'init', [opts]);
+
+		this._tileSize = opts.tileSize;
+		this._scrollData = opts.scrollData;
+		this._adventureMapLayers = [];
+
+		var ctors = [TileView, PathView, NodeView];
+
+		for (var i = 0; i < 3; i++) {
+			this._adventureMapLayers.push(new AdventureMapLayer({
+				superview: opts.superview,
+				x: opts.x,
+				y: opts.y,
+				width: opts.width,
+				height: opts.height,
+				tileSize: opts.tileSize,
+				tileCtor: ctors[i],
+				scrollData: opts.scrollData,
+				map: opts.map,
+				tiles: opts.tiles,
+				nodes: opts.nodes,
+				labelCtor: opts.labelCtor || LabelView,
+				blockEvents: i > 0
+			}));
+		}
+
+		this._gestureView = this._adventureMapLayers[0];
+		this._gestureView.on('DragSingle', bind(this, 'onDragSingle'));
+	};
+
+	this.onUpdate = function (data) {
+		for (var i = 0; i < 3; i++) {
+			this._adventureMapLayers[i].onUpdate(data);
+		}
+	};
+
+	this.onDragSingle = function (deltaX, deltaY) {
+		var scrollData = this._scrollData;
+		var tileSize = this._tileSize;
+
+		scrollData.x += deltaX;
+		if (scrollData.x < 0) {
+			scrollData.x += tileSize;
+			this.emit('ScrollRight', scrollData);
+		} else if (scrollData.x >= tileSize) {
+			scrollData.x -= tileSize;
+			this.emit('ScrollLeft', scrollData);
+		}
+
+		scrollData.y += deltaY;
+		if (scrollData.y < 0) {
+			scrollData.y += tileSize;
+			this.emit('ScrollDown', scrollData);
+		} else if (scrollData.y >= tileSize) {
+			scrollData.y -= tileSize;
+			this.emit('ScrollUp', scrollData);
+		}
+
+		this.emit('Scroll');
+	};
+
+	this.needsPopulate = function () {
+		for (var i = 0; i < 3; i++) {
+			this._adventureMapLayers[i].needsPopulate();
+		}
+	};
+
+	this.getAdventureMapLayers = function () {
+		return this._adventureMapLayers;
+	};
+});

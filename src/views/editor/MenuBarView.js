@@ -24,7 +24,8 @@ exports = Class(TopBar, function (supr) {
 				{title: 'Right', method: 'onRight'},
 				{title: 'Node', method: 'onNode'},
 				{title: 'Tile', method: 'onTile'},
-				{title: 'Tags', method: 'onTags'}
+				{title: 'Tags', method: 'onTags'},
+				{title: 'Zoom', method: 'onZoom'}
 			];
 
 		var scrollView = new ScrollView({
@@ -92,6 +93,10 @@ exports = Class(TopBar, function (supr) {
 
 	this.onTags = function () {
 		this.emit('Tags', this._tileX, this._tileY);
+	};
+
+	this.onZoom = function () {
+		this.emit('Zoom');
 	};
 
 	this.onClose = function () {
