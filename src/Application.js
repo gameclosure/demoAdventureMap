@@ -1,9 +1,9 @@
 import device;
 
-import .AdventureMap;
-import .views.editor.Editor as Editor;
+import adventuremap.AdventureMap as AdventureMap;
+import adventuremap.views.editor.Editor as Editor;
 
-localStorage.clear();
+//localStorage.clear();
 
 exports = Class(GC.Application, function () {
 
