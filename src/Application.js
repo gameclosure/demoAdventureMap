@@ -2,8 +2,10 @@ import device;
 
 import adventuremap.AdventureMap as AdventureMap;
 import adventuremap.views.editor.Editor as Editor;
+import adventuremap.views.tiles.status.LabelView as LabelView;
+import adventuremap.views.tiles.status.PlayerView as PlayerView;
 
-//localStorage.clear();
+localStorage.clear();
 
 exports = Class(GC.Application, function () {
 
@@ -27,6 +29,16 @@ exports = Class(GC.Application, function () {
 				'resources/images/water14.png'
 			];
 
+		var doodads = [
+				{image: 'resources/images/bushNormal.png', width: 120, height: 144},
+				{image: 'resources/images/bushNormal.png', width: 120, height: 144}
+			];
+
+		var tags = [
+				'Player',
+				'Label'
+			];
+
 		var nodes = [
 				{type: 'active', image: 'resources/images/node/activeRing.png', width: 168, height: 145},
 				{type: 'blue', image: 'resources/images/node/blue.png', width: 94, height: 89},
@@ -39,37 +51,69 @@ exports = Class(GC.Application, function () {
 				{type: 'line', image: 'resources/images/path/line.png', height: 31}
 			];
 
-		var tags = [
-				'Stars', 'Warp', 'Bonus'
-			];
+		var inputLayerIndex = 0;
 
 		this._adventureMap = new AdventureMap({
+			// View properties:
 			superview: this,
 			x: 0,
 			y: 0,
 			width: this.baseWidth,
 			height: this.baseHeight,
-			dotDistance: 60,
-			dashDistance: 60,
-			tiles: tiles,
-			nodes: nodes,
-			paths: paths,
-			labelWidth: 200,
-			labelHeight: 200
+			editMode: (inputLayerIndex === 0),
+			// Grid properties:
+			gridSettings: {
+				width: 20,
+				height: 20
+			},
+			tileSettings: {
+				tiles: tiles,
+				doodads: doodads,
+				tileWidth: 256,
+				tileHeight: 256,
+				defaultTile: 3
+			},
+			pathSettings: {
+				// Display properties:
+				dotDistance: 60,
+				dashDistance: 60,
+				paths: paths
+			},
+			nodeSettings: {
+				nodes: nodes,
+				itemCtors: {
+					Label: LabelView,
+					Player: PlayerView
+				}
+			},
+			inputLayerIndex: inputLayerIndex
 		});
 
-		new Editor({
-			superview: this,
-			x: 0,
-			y: 0,
-			width: this.baseWidth,
-			height: this.baseHeight,
-			adventureMap: this._adventureMap,
-			tiles: tiles,
-			nodes: nodes,
-			paths: paths,
-			tags: tags
-		});
+		this._adventureMap.load(
+			{"tileWidth":256,"tileHeight":256,"width":20,"height":20,"grid":[[3],[3],[3],[3,3,{"node":2,"right":3,"bottom":3,"x":0.67578125,"y":0.7406249999999996,"tags":{"Bonus":true},"id":"3","map":3},{"node":3,"bottom":3,"tags":{"Stars":true,"Player":true},"text":"world","title":"hello","x":0.09375,"y":0.2703125000000002,"id":"4","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3,3,{"node":2,"bottom":3,"x":0.1781250000000001,"y":0.4976562499999999,"tags":{"Warp":true},"id":"2","map":3},{"node":3,"x":0.7601562499999996,"y":0.6179687499999997,"tags":{"Warp":true},"id":"5","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3,3,{"node":2,"tags":{"Stars":true},"id":"1","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3]]}
+		);
+
+		var model = this._adventureMap.getModel();
+		setTimeout(bind(this, function () {
+			console.log('set tag!');
+			model.addTagById('3', 'Player');
+		}), 3000);
+
+		if (inputLayerIndex === 0) {
+			new Editor({
+				superview: this,
+				x: 0,
+				y: 0,
+				width: this.baseWidth,
+				height: this.baseHeight,
+				adventureMap: this._adventureMap,
+				tiles: tiles,
+				doodads: doodads,
+				nodes: nodes,
+				paths: paths,
+				tags: tags
+			});
+		}
 	};
 
 	this.scaleUI = function () {
@@ -83,9 +127,5 @@ exports = Class(GC.Application, function () {
 			this.scale = device.height / this.baseHeight;
 		}
 		this.view.style.scale = this.scale;
-	};
-
-	this.tick = function (dt) {
-		this._adventureMap.tick(dt);
 	};
 });
