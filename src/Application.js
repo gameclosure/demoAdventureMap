@@ -5,99 +5,116 @@ import adventuremap.views.editor.Editor as Editor;
 import adventuremap.views.tiles.status.LabelView as LabelView;
 import adventuremap.views.tiles.status.PlayerView as PlayerView;
 
-localStorage.clear();
+import .data;
+//localStorage.clear();
 
 exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
+		var editMode = true;
+		var inputLayerIndex = editMode ? 0 : 2;
+
+		this.engine.updateOpts({
+			alwaysRepaint: true,
+			clearEachFrame: editMode,
+			keyListenerEnabled: false,
+			logsEnabled: true,
+			noTimestep: false,
+			noReflow: true,
+			showFPS: true,
+			resizeRootView: false,
+			preload: ['resources/images', 'resources/audio']
+		});
+
 		this.scaleUI();
 
-		var tiles = [
-				'resources/images/water01.png',
-				'resources/images/water02.png',
-				'resources/images/water03.png',
-				'resources/images/water04.png',
-				'resources/images/water05.png',
-				'resources/images/water06.png',
-				'resources/images/water07.png',
-				'resources/images/water08.png',
-				'resources/images/water09.png',
-				'resources/images/water10.png',
-				'resources/images/water11.png',
-				'resources/images/water12.png',
-				'resources/images/water13.png',
-				'resources/images/water14.png'
-			];
+		var gridSettings = {
+				width: 10,
+				height: 18,
+				tags: [
+					'zone1A',
+					'zone1B',
+					'zone2A',
+					'zone2B'
+				]
+			};
 
-		var doodads = [
-				{image: 'resources/images/bushNormal.png', width: 120, height: 144},
-				{image: 'resources/images/bushNormal.png', width: 120, height: 144}
-			];
+		var tileSettings = {
+				tiles: [],
+				doodads: [
+					{image: 'resources/images/bushNormal.png', width: 120, height: 144},
+					{image: 'resources/images/bushNormal.png', width: 120, height: 144}
+				],
+				tileWidth: 256,
+				tileHeight: 256,
+				defaultTile: 3
+			};
 
-		var tags = [
-				'Player',
-				'Label'
-			];
+		for (var y = 0; y < gridSettings.height; y++) {
+			for (var x = 0; x < gridSettings.width; x++) {
+				var filename = 'resources/images/tiles/' + String.fromCharCode(97 + y) + (x + 1) + '.png';
+				tileSettings.tiles.push(filename);
+			}
+		}
 
-		var nodes = [
-				{type: 'active', image: 'resources/images/node/activeRing.png', width: 168, height: 145},
-				{type: 'blue', image: 'resources/images/node/blue.png', width: 94, height: 89},
-				{type: 'dark', image: 'resources/images/node/dark.png', width: 94, height: 89}
-			];
+		var nodeSettings = {
+				nodes: [
+					{image: 'resources/images/node/grayButton.png', width: 170, height: 170},
+					{image: 'resources/images/node/topButton.png', width: 170, height: 170},
+					{image: 'resources/images/node/midButton.png', width: 170, height: 170},
+					{image: 'resources/images/node/lowButton.png', width: 170, height: 170}
+				],
+				itemCtors: {
+					Label: LabelView,
+					Player: PlayerView
+				}
+			};
 
-		var paths = [
-				{type: 'dash', image: 'resources/images/path/dash.png', width: 51, height: 31},
-				{type: 'dot', image: 'resources/images/path/dot.png', width: 31, height: 31},
-				{type: 'line', image: 'resources/images/path/line.png', height: 31}
-			];
-
-		var inputLayerIndex = 0;
+		var pathSettings = {
+				// Display properties:
+				dotDistance: 50,
+				dashDistance: 70,
+				paths: [
+					{type: 'dash', image: 'resources/images/path/grayDash.png', width: 200, height: 200},
+					{type: 'dash', image: 'resources/images/path/topDash.png', width: 200, height: 200},
+					{type: 'dash', image: 'resources/images/path/midDash.png', width: 200, height: 200},
+					{type: 'dash', image: 'resources/images/path/lowDash.png', width: 200, height: 200},
+					{type: 'dot', image: 'resources/images/path/grayDot.png', width: 150, height: 150},
+					{type: 'dot', image: 'resources/images/path/topDot.png', width: 150, height: 150},
+					{type: 'dot', image: 'resources/images/path/midDot.png', width: 150, height: 150},
+					{type: 'dot', image: 'resources/images/path/lowDot.png', width: 150, height: 150},
+					{type: 'line', image: 'resources/images/path/grayLine.png', height: 360},
+					{type: 'line', image: 'resources/images/path/topLine.png', height: 360},
+					{type: 'line', image: 'resources/images/path/midLine.png', height: 360},
+					{type: 'line', image: 'resources/images/path/lowLine.png', height: 360}
+				]
+			};
 
 		this._adventureMap = new AdventureMap({
-			// View properties:
 			superview: this,
 			x: 0,
 			y: 0,
 			width: this.baseWidth,
 			height: this.baseHeight,
 			editMode: (inputLayerIndex === 0),
-			// Grid properties:
-			gridSettings: {
-				width: 20,
-				height: 20
-			},
-			tileSettings: {
-				tiles: tiles,
-				doodads: doodads,
-				tileWidth: 256,
-				tileHeight: 256,
-				defaultTile: 3
-			},
-			pathSettings: {
-				// Display properties:
-				dotDistance: 60,
-				dashDistance: 60,
-				paths: paths
-			},
-			nodeSettings: {
-				nodes: nodes,
-				itemCtors: {
-					Label: LabelView,
-					Player: PlayerView
-				}
-			},
+			gridSettings: gridSettings,
+			tileSettings: tileSettings,
+			pathSettings: pathSettings,
+			nodeSettings: nodeSettings,
 			inputLayerIndex: inputLayerIndex
 		});
+		this._adventureMap.refresh();
 
-		this._adventureMap.load(
-			{"tileWidth":256,"tileHeight":256,"width":20,"height":20,"grid":[[3],[3],[3],[3,3,{"node":2,"right":3,"bottom":3,"x":0.67578125,"y":0.7406249999999996,"tags":{"Bonus":true},"id":"3","map":3},{"node":3,"bottom":3,"tags":{"Stars":true,"Player":true},"text":"world","title":"hello","x":0.09375,"y":0.2703125000000002,"id":"4","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3,3,{"node":2,"bottom":3,"x":0.1781250000000001,"y":0.4976562499999999,"tags":{"Warp":true},"id":"2","map":3},{"node":3,"x":0.7601562499999996,"y":0.6179687499999997,"tags":{"Warp":true},"id":"5","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3,3,{"node":2,"tags":{"Stars":true},"id":"1","map":3},3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3],[3]]}
-		);
 
-		var model = this._adventureMap.getModel();
-		setTimeout(bind(this, function () {
-			console.log('set tag!');
-			model.addTagById('3', 'Player');
-		}), 3000);
+		this._adventureMap.load(data);
+
+		//var model = this._adventureMap.getModel();
+		//setTimeout(bind(this, function () {
+		//	console.log('set tag!');
+		//	model.addTagById('3', 'Player');
+		//}), 3000);
+
+		this._adventureMap.setScale(0.5);
 
 		if (inputLayerIndex === 0) {
 			new Editor({
@@ -107,11 +124,10 @@ exports = Class(GC.Application, function () {
 				width: this.baseWidth,
 				height: this.baseHeight,
 				adventureMap: this._adventureMap,
-				tiles: tiles,
-				doodads: doodads,
-				nodes: nodes,
-				paths: paths,
-				tags: tags
+				gridSettings: gridSettings,
+				tileSettings: tileSettings,
+				pathSettings: pathSettings,
+				nodeSettings: nodeSettings
 			});
 		}
 	};
