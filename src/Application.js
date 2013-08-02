@@ -15,7 +15,6 @@ import .settings.pathSettings as pathSettings;
 import .settings.tileSettings as tileSettings;
 
 import .data;
-//localStorage.clear();
 
 exports = Class(GC.Application, function () {
 
@@ -30,12 +29,11 @@ exports = Class(GC.Application, function () {
 			logsEnabled: true,
 			noTimestep: false,
 			noReflow: true,
-			showFPS: true,
+			showFPS: false,
 			resizeRootView: false,
-			preload: ['resources/images', 'resources/audio']
+			scaleUI: [576, 1024],
+			preload: ['resources/images']
 		});
-
-		this.scaleUI();
 
 		this._adventureMap = new AdventureMap({
 			superview: this,
@@ -50,12 +48,11 @@ exports = Class(GC.Application, function () {
 			nodeSettings: nodeSettings,
 			inputLayerIndex: inputLayerIndex
 		});
+
 		this._adventureMap.load(data);
-
-		this._currentId = 0;
-
 		this._adventureMap.setScale(0.5);
 		this._adventureMap.on('ClickNode', bind(this, 'onClickNode'));
+		this._adventureMap.on('ClickTag', bind(this, 'onClickTag'));
 
 		editMode ? this.initEditor() : this.initDemo();
 	};
@@ -76,6 +73,8 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.initDemo = function () {
+		this._currentId = 0;
+
 		this._nodeText = new TextView({
 			superview: this,
 			x: 0,
@@ -129,17 +128,19 @@ exports = Class(GC.Application, function () {
 		});
 	};
 
-	this.scaleUI = function () {
-		if (device.height > device.width) {
-			this.baseWidth = 576;
-			this.baseHeight = device.height * (576 / device.width);
-			this.scale = device.width / this.baseWidth;
-		} else {
-			this.baseWidth = 1024;
-			this.baseHeight = device.height * (1024 / device.width);
-			this.scale = device.height / this.baseHeight;
-		}
-		this.view.style.scale = this.scale;
+	this.showText = function (text) {
+		this._nodeText.setText(text);
+		this._nodeText.style.visible = true;
+		this._clickTimeout && clearTimeout(this._clickTimeout);
+		this._clickTimeout = setTimeout(
+			bind(
+				this,
+				function () {
+					this._nodeText.style.visible = false;
+				}
+			),
+			2000
+		);
 	};
 
 	this.onToggleZone = function (zone) {
@@ -161,18 +162,11 @@ exports = Class(GC.Application, function () {
 	};
 
 	this.onClickNode = function (tile) {
-		this._nodeText.setText('Clicked on ' + tile.id);
-		this._nodeText.style.visible = true;
-		this._clickTimeout && clearTimeout(this._clickTimeout);
-		this._clickTimeout = setTimeout(
-			bind(
-				this,
-				function () {
-					this._nodeText.style.visible = false;
-				}
-			),
-			2000
-		);
+		this.showText('Clicked on node ' + tile.id);
+	};
+
+	this.onClickTag = function (tag, tile) {
+		this.showText('Clicked on tag ' + tag);
 	};
 
 	this.onNextPos = function () {

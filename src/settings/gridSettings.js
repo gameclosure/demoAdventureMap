@@ -5,6 +5,7 @@ exports = {
 		'zone1A',
 		'zone1B',
 		'zone2A',
-		'zone2B'
+		'zone2B',
+		'Player'
 	]
 };
