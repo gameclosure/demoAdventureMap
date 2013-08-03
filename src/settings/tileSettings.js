@@ -30,8 +30,8 @@ exports = {
 			url: 'resources/images/grass/grass',
 			animation: 'default',
 			frameRate: 8,
-			width: 180,
-			height: 120
+			width: 198,
+			height: 132
 		},
 		{
 			image: 'resources/images/star/star_default_0001.png',
