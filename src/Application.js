@@ -20,7 +20,6 @@ exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
 		var editMode = false;
-		var inputLayerIndex = editMode ? 0 : 2;
 
 		this.engine.updateOpts({
 			alwaysRepaint: true,
@@ -41,12 +40,11 @@ exports = Class(GC.Application, function () {
 			y: 0,
 			width: this.baseWidth,
 			height: this.baseHeight,
-			editMode: (inputLayerIndex === 0),
+			editMode: editMode,
 			gridSettings: gridSettings,
 			tileSettings: tileSettings,
 			pathSettings: pathSettings,
-			nodeSettings: nodeSettings,
-			inputLayerIndex: inputLayerIndex
+			nodeSettings: nodeSettings
 		});
 
 		this._adventureMap.load(data);
