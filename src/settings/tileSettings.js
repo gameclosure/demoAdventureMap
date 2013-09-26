@@ -2,20 +2,26 @@ exports = {
 	tiles: 'CREATE_GRID',
 	doodads: [
 		{
-			image: 'resources/images/bunny/bun_stand_0001.png',
-			url: 'resources/images/bunny/bun',
-			animation: 'stand',
-			frameRate: 5,
-			width: 240,
-			height: 520
-		},
-		{
-			image: 'resources/images/bunny/bun_stand_0001.png',
-			url: 'resources/images/bunny/bun',
-			animation: 'stand',
-			frameRate: 5,
-			width: 216,
-			height: 468
+			image: 'resources/images/mushroom/mushroom_idle_0001.png',
+			url: 'resources/images/mushroom/mushroom',
+			animation: 'idle',
+			frameRate: 24,
+			width: 256,
+			height: 256
+		},{
+			image: 'resources/images/clover/clover_idle_0001.png',
+			url: 'resources/images/clover/clover',
+			animation: 'idle',
+			frameRate: 24,
+			width: 256,
+			height: 256
+		},{
+			image: 'resources/images/flower/flower_idle_0001.png',
+			url: 'resources/images/flower/flower',
+			animation: 'idle',
+			frameRate: 24,
+			width: 256,
+			height: 256
 		},
 		{
 			image: 'resources/images/bunny/bun_stand_0001.png',
