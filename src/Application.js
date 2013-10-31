@@ -19,7 +19,7 @@ import .data;
 exports = Class(GC.Application, function () {
 
 	this.initUI = function () {
-		var editMode = false;
+		var editMode = true;
 
 		this.engine.updateOpts({
 			alwaysRepaint: true,
